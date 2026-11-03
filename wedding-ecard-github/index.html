@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sirinporn &amp; Whatchalakorn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="jas" viewBox="-10 -10 20 20">
+    <g style="fill:var(--paper);stroke:var(--gold);stroke-width:.8">
+      <ellipse cx="0" cy="-5" rx="2.6" ry="5"/>
+      <ellipse cx="0" cy="-5" rx="2.6" ry="5" transform="rotate(72)"/>
+      <ellipse cx="0" cy="-5" rx="2.6" ry="5" transform="rotate(144)"/>
+      <ellipse cx="0" cy="-5" rx="2.6" ry="5" transform="rotate(216)"/>
+      <ellipse cx="0" cy="-5" rx="2.6" ry="5" transform="rotate(288)"/>
+    </g>
+    <circle r="1.6" style="fill:var(--gold)"/>
+  </symbol>
+</svg>
+
+<div class="intro" id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="intro-title">
+  <div class="intro-stage">
+    <p class="intro-eyebrow">The Wedding of<br>Sirinporn &amp; Whatchalakorn</p>
+    <h1 class="intro-title" id="intro-title">You are Invited</h1>
+    <div class="env-wrap">
+      <button class="env" id="env" type="button" aria-label="Tap to open your invitation">
+        <span class="env-back"></span>
+        <span class="env-card"><small>Sirinporn &amp; Whatchalakorn</small><b>17.1.70</b></span>
+        <span class="env-front"></span>
+        <span class="env-flap"></span>
+        <span class="env-seal" aria-hidden="true"><svg width="40" height="40" viewBox="-20 -20 40 40" fill="#561120" stroke="none" style="filter:drop-shadow(0 1px 0 rgba(255,255,255,.2))"><circle r="17" fill="none" stroke="#561120" stroke-width="1"/><circle r="14.6" fill="none" stroke="#561120" stroke-width=".6"/><text x="0" y="6" text-anchor="middle" font-family="'Bodoni Moda',Didot,Georgia,serif" font-size="17" font-weight="600" font-style="italic" letter-spacing="-.5">SW</text></svg></span>
+      </button>
+    </div>
+    <p class="intro-tap">Tap to Open</p>
+  </div>
+</div>
+
+<main class="sheet">
+  <header class="hero">
+    <p class="eyebrow">You are invited to the wedding of</p>
+    <h1 class="names"><span>Sirinporn</span><span class="amp">&amp;</span><span>Whatchalakorn</span></h1>
+    <p class="lead caps"><span>&ldquo;FOR THOSE WE LOVE MOST</span><span>WE WARMLY INVITE YOU TO CELEBRATE</span><span>THE BEGINNING OF THE LOVE STORY</span><span>WE ARE BUILDING TOGETHER&rdquo;</span></p>
+    <div class="date">
+      <span class="dow">Sunday</span>
+      <span class="big">17.1.70</span>    </div>
+    <p class="count" id="count" hidden></p>
+  </header>
+
+  <figure class="hero-photo"><img src="assets/img/hero.jpg" width="800" height="1200" alt="The couple standing arm in arm among pastel flowers in soft window light" loading="lazy"></figure>
+
+  <div class="divider" aria-hidden="true"><svg><use href="#jas"/></svg><svg><use href="#jas"/></svg><svg><use href="#jas"/></svg></div>
+
+  <figure class="venue-photo"><img src="assets/img/venue.jpg" width="415" height="518" alt="The wedding venue: a stone building with arched windows and warm lanterns, framed by white flowering trees" loading="lazy"></figure>
+
+  <div class="parts">
+    <section class="part" aria-labelledby="h-plan">
+      <h2 class="part-title" id="h-plan">Programme · กำหนดการ</h2>
+      <ol class="sched" lang="th">
+        <li><time datetime="16:30">16.30<span class="u"> น.</span></time><div><b>Vow Ceremony</b></div></li>
+        <li><time datetime="18:00">18.00<span class="u"> น.</span></time><div><b>ถ่ายภาพร่วมกัน</b></div></li>
+        <li><time datetime="18:30">18.30<span class="u"> น.</span></time><div><b>งานเลี้ยงฉลองมงคลสมรส</b></div></li>
+      </ol>
+    </section>
+
+    <section class="part" aria-labelledby="h-venue">
+      <h2 class="part-title" id="h-venue">Venue · สถานที่จัดงาน</h2>
+      <div class="venue">
+        <strong>La Chapelle</strong>
+        <span class="hall">Saint Hall</span>
+        <a class="btn-map" id="map" target="_blank" rel="noopener" href="#">View map · เปิดแผนที่</a>
+      </div>
+    </section>
+
+    <section class="part" aria-labelledby="h-dress">
+      <h2 class="part-title" id="h-dress">Dress code · การแต่งกาย</h2>
+      <div class="dress">
+        <p><b>Smart formal</b></p>
+        <ul class="swatches" aria-label="Suggested colours: white, cream, pastel blue, pastel pink, pastel purple">
+        <li style="--c:#ffffff" title="White"></li>
+        <li style="--c:#f8f1df" title="Cream"></li>
+        <li style="--c:#cfe3f5" title="Pastel blue"></li>
+        <li style="--c:#f8d3de" title="Pastel pink"></li>
+        <li style="--c:#dccff0" title="Pastel purple"></li>
+      </ul>
+      </div>
+    </section>
+  </div>
+
+  <div class="cal" id="cal">
+    <p class="hint">Add the wedding to your calendar · เพิ่มลงปฏิทิน</p>
+    <div class="cal-row">
+      <a class="cal-btn" id="cal-g" target="_blank" rel="noopener" href="#">Google Calendar</a>
+      <button class="cal-btn" id="cal-ics" type="button" hidden>Download .ics</button>
+    </div>
+  </div>
+
+  <div class="divider" aria-hidden="true"><svg><use href="#jas"/></svg><svg><use href="#jas"/></svg><svg><use href="#jas"/></svg></div>
+
+  <section class="duo" aria-label="The bride and groom">
+    <figure><img src="assets/img/bride.jpg" width="640" height="960" alt="The bride in a sparkling gown holding a pastel bouquet among flowers" loading="lazy"><figcaption>Sirinporn</figcaption></figure>
+    <figure><img src="assets/img/groom.jpg" width="640" height="960" alt="The groom in a brown jacket smiling, holding a pastel bouquet among flowers" loading="lazy"><figcaption>Whatchalakorn</figcaption></figure>
+  </section>
+
+  <div class="divider" aria-hidden="true"><svg><use href="#jas"/></svg><svg><use href="#jas"/></svg><svg><use href="#jas"/></svg></div>
+
+  <section class="gallery" aria-labelledby="h-gal">
+    <h2 class="part-title" id="h-gal">Our Moments · ช่วงเวลาของเรา</h2>
+    <div class="gal-grid">
+      <img class="wide" src="assets/img/gallery-1.jpg" width="800" height="1200" alt="The couple face to face under a sunlit veil" loading="lazy">
+      <img src="assets/img/gallery-2.jpg" width="640" height="960" alt="The couple smiling together under a sheer veil" loading="lazy">
+      <img src="assets/img/gallery-3.jpg" width="640" height="960" alt="The couple close together under a veil, foreheads almost touching" loading="lazy">
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true"><svg><use href="#jas"/></svg><svg><use href="#jas"/></svg><svg><use href="#jas"/></svg></div>
+
+  <section class="block" aria-labelledby="h-rsvp">
+    <h2 class="part-title" id="h-rsvp">RSVP · ตอบรับคำเชิญ</h2>
+    <p class="eyebrow" style="margin-top:-6px">Kindly reply before 31 December 2026</p>
+
+    <form id="form" novalidate>
+      <p class="sub first">Your details · ข้อมูลของคุณ</p>
+      <div class="field">
+        <label for="name">Full Name / ชื่อ-นามสกุล (ชื่อเล่น)</label>
+        <input type="text" id="name" autocomplete="name" placeholder="e.g. Somchai Jaidee (Chai)" maxlength="80">
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone Number <span class="hint">(เบอร์โทรศัพท์)</span></label>
+        <input type="tel" id="phone" inputmode="tel" autocomplete="tel" placeholder="e.g. 081-234-5678" maxlength="20">
+      </div>
+
+      <p class="sub">Attendance · การเข้าร่วม</p>
+      <fieldset class="field">
+        <legend>Will you attend?</legend>
+        <div class="choice">
+          <label><input type="radio" name="attend" value="yes" checked><span>Joyfully accept</span></label>
+          <label><input type="radio" name="attend" value="no"><span>Regretfully decline</span></label>
+        </div>
+      </fieldset>
+
+      <div id="extras" style="display:grid;gap:22px">
+        <div class="field">
+          <label for="gcount">Number of guests <span class="hint">(including you)</span></label>
+          <div class="stepper">
+            <button type="button" id="dec" aria-label="Fewer guests">−</button>
+            <output id="gcount" aria-live="polite">1</output>
+            <button type="button" id="inc" aria-label="More guests">+</button>
+          </div>
+        </div>
+
+        <fieldset class="field">
+          <legend>Which parts will you join?</legend>
+          <div class="pick">
+            <label><input type="checkbox" name="sess" value="Vow Ceremony 16.30" checked><span>Vow Ceremony · 16.30 น.</span></label>
+            <label><input type="checkbox" name="sess" value="ถ่ายภาพร่วมกัน 18.00" checked><span>ถ่ายภาพร่วมกัน · 18.00 น.</span></label>
+            <label><input type="checkbox" name="sess" value="งานเลี้ยงฉลองมงคลสมรส 18.30" checked><span>งานเลี้ยงฉลองมงคลสมรส · 18.30 น.</span></label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="diet">Food allergies or dietary needs <span class="hint">(optional)</span></label>
+          <input type="text" id="diet" placeholder="e.g. shellfish allergy, vegetarian" maxlength="120">
+        </div>
+      </div>
+
+      <p class="sub">Message · ข้อความถึงคู่บ่าวสาว</p>
+      <div class="field">
+        <label for="note">A message for the couple <span class="hint">(optional · shown on this page · แสดงในหน้านี้)</span></label>
+        <textarea id="note" maxlength="400" placeholder="Leave your wishes here"></textarea>
+      </div>
+
+    </form>
+
+    <figure class="qr">
+      <p class="qr-title">Wedding Gift &amp; Blessings</p>
+      <p class="th">ของขวัญและคำอวยพรในวันแต่งงาน</p>
+      <img class="qr-img" width="560" height="559" alt="PromptPay QR code for wedding gifts" src="assets/img/qr-promptpay.png">
+      <figcaption>Scan with any banking app</figcaption>
+    </figure>
+
+    <div id="actions" style="display:grid;gap:22px">
+      <p class="err" id="err" role="alert"></p>
+      <button class="btn" type="submit" id="send" form="form">Confirm My Response</button>
+    </div>
+
+    <div class="result" id="result" hidden>
+      <svg width="28" height="28" aria-hidden="true"><use href="#jas"/></svg>
+      <h2 id="r-title"></h2>
+    </div>
+  </section>
+
+  <section class="wishes" aria-labelledby="wish-h">
+    <h2 class="part-title" id="wish-h">Blessings from friends · คำอวยพรจากเพื่อนๆ</h2>
+    <div class="wish-list" id="wish-list"></div>
+    <p class="wish-empty" id="wish-empty">Be the first to leave a blessing for the couple.</p>
+  </section>
+
+  <p class="foot">Contact the couple<br>LINE <b id="lineid">wk.whatchalakorn</b> &nbsp;·&nbsp; Tel <a class="tel" href="tel:0656519996"><b>065-651-9996</b></a></p>
+</main>
+
+<audio id="bgm" loop preload="auto" src="assets/audio/music.mp3"></audio>
+<button class="bgm-btn" id="bgm-btn" type="button" aria-pressed="false">♪ <span id="bgm-t">Play Music</span></button>
+
+<script src="js/config.js"></script>
+<script src="js/backend.js"></script>
+<script src="js/main.js"></script>
+<script src="js/music.js"></script>
+<script src="js/intro.js"></script>
+</body>
+</html>

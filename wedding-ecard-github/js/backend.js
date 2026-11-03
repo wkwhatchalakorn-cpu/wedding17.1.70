@@ -20,7 +20,11 @@
       // text/plain keeps this a "simple" request, so the browser sends no CORS preflight to Apps Script
       return fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) })
         .then(function (res) { return res.json(); })
-        .then(function (j) { if (!j || !j.ok) throw new Error((j && j.error) || "save failed"); return j; });
+        .then(function (j) {
+          var good = j && (j.ok === true || j.success === true || /^(ok|success)$/i.test(String(j.result || j.status || "")));
+          if (!good) throw new Error((j && (j.error || j.message)) || ("unexpected reply from the server: " + JSON.stringify(j).slice(0, 80)));
+          return j;
+        });
     },
     loadWishes: function () {
       if (!url) return Promise.resolve([]);

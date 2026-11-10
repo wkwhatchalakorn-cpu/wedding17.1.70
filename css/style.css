@@ -150,6 +150,11 @@ a.btn { display: flex; align-items: center; justify-content: center; text-decora
 /* result */
 .result { text-align: center; justify-items: center; }
 .result h2 { font-size: 28px; }
+.thanks-inline { margin: 0; text-align: center; font: italic 500 21px/1.7 var(--f-display); color: var(--ink); }
+.thanks-end { display: grid; justify-items: center; gap: 14px; margin-top: 44px; padding-top: 32px; border-top: 1px solid var(--line); text-align: center; }
+[hidden] { display: none !important; }
+.thanks-end svg { color: var(--accent); }
+.thanks-end p { margin: 0; max-width: 30ch; font: italic 500 21px/1.7 var(--f-display); color: var(--ink); }
 .thanks-page { display: none; }
 body.done .sheet, body.done .intro, body.done .bgm-btn { display: none !important; }
 body.done { overflow: auto; padding-block: 0; margin: 0; }

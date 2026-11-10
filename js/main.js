@@ -54,17 +54,12 @@
     return t;
   }
 
-  function showResult(r, saved) {
-    $("form").hidden = true;
-    $("actions").hidden = true;
-    $("result").hidden = false;
-    // the process ends here: just the thank-you sentence, nothing else to do
-    var t = $("r-title"); t.className = "thanks";
-    t.textContent = "It is our honor and pleasure to have you share in our special occasion. Thank you for your kindness and thoughtful response.";
-    // cut to a page of its own: only the thank-you sentence stays on screen
-    document.body.classList.remove("locked");
-    document.body.classList.add("done");
-    try { window.scrollTo(0, 0); } catch (x) {}
+  function showResult(r, scroll) {
+    // the Confirm button is replaced by the thank-you sentence; nothing else to do
+    $("send").hidden = true;
+    $("err").textContent = "";
+    $("thanks-inline").hidden = false;
+    if (scroll) setTimeout(function () { try { $("thanks-inline").scrollIntoView({ behavior: "smooth", block: "center" }); } catch (x) {} }, 60);
   }
 
   function fillForm(r) {
@@ -96,6 +91,4 @@
   });
 
 
-  // a guest who already replied on this device just sees the thank-you
-  try { if (localStorage.getItem("wedding_rsvp_done") === "1") showResult({}, true); } catch (x) {}
 })();

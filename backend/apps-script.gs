@@ -3,8 +3,8 @@
  * Bound to a Google Sheet: Extensions > Apps Script, paste this file, then Deploy > Manage deployments >
  * edit > New version (Execute as: Me, Who has access: Anyone). Copy the /exec URL into js/config.js.
  *
- * On an empty sheet it creates these columns in this order: note, id, updatedAt, name, phone number, attending (yes/no),
- * guests (number), which part will you join, food allergy.
+ * On an empty sheet it creates these columns in this order: full name, phone number, attendance (yes/no), guests number,
+ * which part will you join, food allergies, message, then id and updatedAt (used to update a guest who replies again).
  * It writes into the sheet named SHEET below, matching columns by their header text in row 1, so your own
  * headers (e.g. "phone number", "which part will you join", "food allergy") are used as they are.
  * Any column it needs that is missing is added at the end. A guest who replies again updates their own row.
@@ -13,15 +13,15 @@ var SHEET = "";   // leave empty to use the first sheet; or put a tab name such 
 
 // Column order for a new/empty sheet (field, header names it may match, header it creates)
 var FIELDS = [
-  ["note",      ["note", "message", "wishes", "blessing", "leave your wishes here"], "note"],
-  ["id",        ["id", "guest id"],                                                   "id"],
-  ["updatedAt", ["updatedat", "updated at", "timestamp", "time", "date"],            "updatedAt"],
-  ["name",      ["name", "full name", "your name"],                                  "name"],
-  ["phone",     ["phone", "phone number", "tel", "telephone", "mobile"],             "phone number"],
-  ["attending", ["attending", "attend", "will you attend", "attendance", "response"], "attending"],        // yes / no
-  ["guests",    ["guests", "number of guests", "guest", "how many guests"],          "guests"],           // number
-  ["sessions",  ["sessions", "which part will you join", "part", "parts"],           "which part will you join"],
-  ["diet",      ["diet", "food allergy", "food allergies", "dietary needs"],         "food allergy"],
+  ["name",      ["full name", "name", "your name"],                                        "full name"],
+  ["phone",     ["phone number", "phone", "tel", "telephone", "mobile"],                   "phone number"],
+  ["attending", ["attendance", "attending", "attend", "will you attend", "response"],      "attendance"],       // yes / no
+  ["guests",    ["guests number", "guests", "number of guests", "guest", "how many guests"], "guests number"],   // number
+  ["sessions",  ["which part will you join", "sessions", "part", "parts"],                 "which part will you join"],
+  ["diet",      ["food allergies", "food allergy", "diet", "dietary needs"],               "food allergies"],
+  ["note",      ["message", "massage", "note", "wishes", "blessing"],                      "message"],
+  ["id",        ["id", "guest id"],                                                         "id"],
+  ["updatedAt", ["updatedat", "updated at", "timestamp", "time", "date"],                  "updatedAt"]
 ];
 
 function sheet_() {

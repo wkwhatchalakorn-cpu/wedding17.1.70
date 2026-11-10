@@ -143,27 +143,27 @@
     <form id="form" novalidate>
       <p class="sub first">Your details · ข้อมูลของคุณ</p>
       <div class="field">
-        <label for="name">Full Name / ชื่อ-นามสกุล (ชื่อเล่น)</label>
+        <label for="name">1. Full name</label>
         <input type="text" id="name" autocomplete="name" placeholder="e.g. Somchai Jaidee (Chai)" maxlength="80">
       </div>
 
       <div class="field">
-        <label for="phone">Phone Number <span class="hint">(เบอร์โทรศัพท์)</span></label>
+        <label for="phone">2. Phone number</label>
         <input type="tel" id="phone" inputmode="tel" autocomplete="tel" placeholder="e.g. 081-234-5678" maxlength="20">
       </div>
 
-      <p class="sub">Attendance · การเข้าร่วม</p>
+      <p class="sub">Your answers</p>
       <fieldset class="field">
-        <legend>Will you attend?</legend>
+        <legend>3. Attendance (yes/no)</legend>
         <div class="choice">
-          <label><input type="radio" name="attend" value="yes" checked><span>Joyfully accept</span></label>
-          <label><input type="radio" name="attend" value="no"><span>Regretfully decline</span></label>
+          <label><input type="radio" name="attend" value="yes" checked><span>Yes</span></label>
+          <label><input type="radio" name="attend" value="no"><span>No</span></label>
         </div>
       </fieldset>
 
       <div id="extras" style="display:grid;gap:22px">
         <div class="field">
-          <label for="gcount">Number of guests <span class="hint">(including you)</span></label>
+          <label for="gcount">4. Guests number <span class="hint">(including you)</span></label>
           <div class="stepper">
             <button type="button" id="dec" aria-label="Fewer guests">−</button>
             <output id="gcount" aria-live="polite">1</output>
@@ -172,23 +172,22 @@
         </div>
 
         <fieldset class="field">
-          <legend>Which parts will you join?</legend>
+          <legend>5. Which part will you join</legend>
           <div class="pick">
-            <label><input type="checkbox" name="sess" value="Vow Ceremony 16.30" checked><span>Vow Ceremony · 16.30 น.</span></label>
-            <label><input type="checkbox" name="sess" value="ถ่ายภาพร่วมกัน 18.00" checked><span>ถ่ายภาพร่วมกัน · 18.00 น.</span></label>
-            <label><input type="checkbox" name="sess" value="งานเลี้ยงฉลองมงคลสมรส 18.30" checked><span>งานเลี้ยงฉลองมงคลสมรส · 18.30 น.</span></label>
+            <label><input type="checkbox" name="sess" value="Vow Ceremony 16.30" checked><span>Vow Ceremony · 16.30&nbsp;น.</span></label>
+            <label><input type="checkbox" name="sess" value="ถ่ายภาพร่วมกัน 18.00" checked><span>ถ่ายภาพร่วมกัน · 18.00&nbsp;น.</span></label>
+            <label><input type="checkbox" name="sess" value="งานเลี้ยงฉลองมงคลสมรส 18.30" checked><span>งานเลี้ยงฉลองมงคลสมรส · 18.30&nbsp;น.</span></label>
           </div>
         </fieldset>
 
         <div class="field">
-          <label for="diet">Food allergies or dietary needs <span class="hint">(optional)</span></label>
+          <label for="diet">6. Food allergies <span class="hint">(optional)</span></label>
           <input type="text" id="diet" placeholder="e.g. shellfish allergy, vegetarian" maxlength="120">
         </div>
       </div>
 
-      <p class="sub">Message · ข้อความถึงคู่บ่าวสาว</p>
-      <div class="field">
-        <label for="note">A message for the couple <span class="hint">(optional · shown on this page · แสดงในหน้านี้)</span></label>
+            <div class="field">
+        <label for="note">7. Message <span class="hint">(optional)</span></label>
         <textarea id="note" maxlength="400" placeholder="Leave your wishes here"></textarea>
       </div>
 

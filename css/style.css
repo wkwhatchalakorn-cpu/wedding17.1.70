@@ -113,6 +113,10 @@ p { margin: 0; }
 form, .result { display: grid; gap: 22px; }
 .field { display: grid; gap: 8px; min-width: 0; border: 0; padding: 0; margin: 0; }
 .field > label, .field > legend { font-weight: 500; font-size: 15px; padding: 0; }
+/* legend stays on one line in every browser (a grid fieldset can shrink its legend to one word per line) */
+fieldset.field { display: block; }
+fieldset.field > legend { float: left; width: 100%; box-sizing: border-box; margin: 0 0 8px; }
+fieldset.field > legend + * { clear: both; }
 .hint { font-size: 13px; color: var(--muted); font-weight: 400; }
 input[type="text"], input[type="tel"], textarea {
   -webkit-appearance: none; appearance: none; width: 100%; font: inherit; color: var(--ink); background: var(--field);
@@ -131,7 +135,7 @@ input::placeholder, textarea::placeholder { color: var(--muted); opacity: .8; }
 .choice input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .choice input:focus-visible + span, .pick input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
 .pick { display: grid; gap: 8px; }
-.pick span { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); border-radius: 4px; padding: 10px 13px; background: var(--field); }
+.pick span { display: flex; align-items: center; gap: 9px; border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; background: var(--field); font-size: 14px; line-height: 1.5; }
 .pick span::before { content: ""; width: 16px; height: 16px; border: 1px solid var(--muted); border-radius: 3px; flex: none; }
 .pick input:checked + span { border-color: var(--accent); background: var(--soft); }
 .pick input:checked + span::before { background: var(--accent); border-color: var(--accent); box-shadow: inset 0 0 0 3px var(--soft); }

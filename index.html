@@ -1,28 +1,30 @@
+// js/backend.js - จัดการการส่งข้อมูล RSVP ไปยัง Google Apps Script (พร้อมรองรับ Guest ID สำหรับ Upsert)
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. ดึง Guest ID จาก URL อัตโนมัติ (เช่น ?guest_id=G001) เมื่อเปิดผ่าน Google Chrome
+    // 1. ดึง Guest ID จาก URL อัตโนมัติ (เช่น ?guest_id=G001)
     const urlParams = new URLSearchParams(window.location.search);
     const guestId = urlParams.get('guest_id');
 
-    // 2. จัดการเมื่อกดปุ่ม Submit ฟอร์ม RSVP
-    const submitButton = document.getElementById('send');
     const form = document.getElementById('form');
+    const submitButton = document.getElementById('send');
+
+    if (!form) return;
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // รวบรวมข้อมูลจากฟอร์มตามโครงสร้างที่คุณต้องการ
-        // เช็คชื่อ id ของ input ใน HTML ของคุณ (เช่น name, phone, attend, gcount, sess, diet, note)
-        const fullName = document.getElementById('name').value;
-        const phoneNumber = document.getElementById('phone').value;
+        // 2. ดึงข้อมูลจากฟอร์มตาม HTML ที่คุณมี
+        const fullName = document.getElementById('name').value.trim();
+        const phoneNumber = document.getElementById('phone').value.trim();
         
-        // ดึงค่า Attendance (Yes/No) จาก radio button
+        // เช็คการเข้าร่วม (Yes/No)
         const attendRadio = document.querySelector('input[name="attend"]:checked');
         const attending = attendRadio ? (attendRadio.value === 'yes' ? 'Yes' : 'No') : 'Yes';
 
-        // ดึงจำนวนแขก
-        const guestNumber = document.getElementById('gcount').innerText || '1';
+        // จำนวนแขก
+        const guestNumberElem = document.getElementById('gcount');
+        const guestNumber = guestNumberElem ? guestNumberElem.innerText.trim() : '1';
 
-        // ดึงข้อมูลส่วนที่จะเข้าร่วม (Which Part Will You Join) จาก checkbox ที่เลือก
+        // ส่วนที่จะเข้าร่วม (Which Part Will You Join)
         const checkboxes = document.querySelectorAll('input[name="sess"]:checked');
         let parts = [];
         checkboxes.forEach((cb) => {
@@ -30,12 +32,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         const whichPart = parts.join(', ');
 
-        const foodAllergy = document.getElementById('diet').value;
-        const note = document.getElementById('note').value;
+        const foodAllergy = document.getElementById('diet').value.trim();
+        const note = document.getElementById('note').value.trim();
 
-        // จัดรูปแบข้อมูลเป็น JSON เพื่อส่งให้ Google Apps Script
+        // ตรวจสอบชื่อ-นามสกุลเบื้องต้น
+        if (!fullName) {
+            alert('กรุณากรอกชื่อ-นามสกุล (Full name)');
+            document.getElementById('name').focus();
+            return;
+        }
+
+        // 3. จัดแพ็กเกจข้อมูลเป็น JSON
         const formData = {
-            guest_id: guestId || 'G-DEFAULT', // ถ้าไม่มี Guest ID ใน URL จะใช้ค่าสำรอง
+            guest_id: guestId || 'G-DIRECT-' + Date.now(), // ถ้าไม่มี Guest ID ในลิงก์ จะสร้างรหัสชั่วคราวให้
             full_name: fullName,
             phone_number: phoneNumber,
             attending: attending,
@@ -48,11 +57,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // ลิงก์ Google Apps Script Web App ของคุณ
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzwF4dsBUDLOANqu9Y3c7OXnQkm-bCdYx-WgKLfB4dIn5DL6xVf_XWFUEQwg0WxuWMSQg/exec';
 
-        // แสดงสถานะกำลังส่ง (ถ้าต้องการ) หรือเปลี่ยนข้อความปุ่ม
-        submitButton.disabled = true;
-        submitButton.textContent = 'Submitting...';
+        // เปลี่ยนสถานะปุ่มกำลังส่ง
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+        }
 
-        // ส่งข้อมูลแบบ POST ไปยัง Google Apps Script
+        // 4. ส่งข้อมูลแบบ POST ไปยัง Google Sheets
         fetch(scriptURL, {
             method: 'POST',
             body: JSON.stringify(formData)
@@ -60,19 +71,23 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(result => {
             console.log('Success:', result);
-            alert('บันทึกข้อมูลเรียบร้อยแล้ว ขอบคุณครับ!');
+            alert('บันทึกข้อมูลคำตอบรับ (RSVP) เรียบร้อยแล้ว ขอบคุณครับ!');
             
-            // แสดงข้อความขอบคุณแบบ Inline (ถ้ามี element นี้ใน HTML)
+            // แสดงข้อความขอบคุณแบบ Inline บนหน้าเว็บ
             const thanksElem = document.getElementById('thanks-inline');
             if (thanksElem) thanksElem.hidden = false;
             
-            submitButton.textContent = 'Confirmed';
+            if (submitButton) {
+                submitButton.textContent = 'Confirmed';
+            }
         })
         .catch(error => {
             console.error('Error!', error);
-            alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
-            submitButton.disabled = false;
-            submitButton.textContent = 'Confirm My Response';
+            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Confirm My Response';
+            }
         });
     });
 });

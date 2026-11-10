@@ -24,6 +24,12 @@
           var good = j && (j.ok === true || j.success === true || /^(ok|success)$/i.test(String(j.result || j.status || "")));
           if (!good) throw new Error((j && (j.error || j.message)) || ("unexpected reply from the server: " + JSON.stringify(j).slice(0, 80)));
           return j;
+        }, function (err) {
+          // Some browsers refuse to *read* the Apps Script reply even though the request arrived.
+          // Send it once more without reading the reply (safe: the guest's row is updated by id, never duplicated).
+          if (!(err instanceof TypeError)) throw err;
+          return fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) })
+            .then(function () { return { ok: true, opaque: true }; });
         });
     }
   };

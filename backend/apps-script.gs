@@ -3,31 +3,35 @@
  * Bound to a Google Sheet: Extensions > Apps Script, paste this file, then Deploy > Manage deployments >
  * edit > New version (Execute as: Me, Who has access: Anyone). Copy the /exec URL into js/config.js.
  *
+ * On an empty sheet it creates these columns in this order: note, id, updatedAt, name, phone number, attending (yes/no),
+ * guests (number), which part will you join, food allergy.
  * It writes into the sheet named SHEET below, matching columns by their header text in row 1, so your own
  * headers (e.g. "phone number", "which part will you join", "food allergy") are used as they are.
  * Any column it needs that is missing is added at the end. A guest who replies again updates their own row.
- * Column "hide": type TRUE in it to keep a blessing off the public list.
  */
 var SHEET = "";   // leave empty to use the first sheet; or put a tab name such as "RSVP"
 
-// field -> header names it may match (lowercase, compared after trimming)
+// Column order for a new/empty sheet (field, header names it may match, header it creates)
 var FIELDS = [
+  ["note",      ["note", "message", "wishes", "blessing", "leave your wishes here"], "note"],
   ["id",        ["id", "guest id"],                                                   "id"],
   ["updatedAt", ["updatedat", "updated at", "timestamp", "time", "date"],            "updatedAt"],
   ["name",      ["name", "full name", "your name"],                                  "name"],
   ["phone",     ["phone", "phone number", "tel", "telephone", "mobile"],             "phone number"],
-  ["attending", ["attending", "attend", "will you attend", "attendance", "response"], "attending"],
-  ["guests",    ["guests", "number of guests", "guest", "how many guests"],          "guests"],
+  ["attending", ["attending", "attend", "will you attend", "attendance", "response"], "attending"],        // yes / no
+  ["guests",    ["guests", "number of guests", "guest", "how many guests"],          "guests"],           // number
   ["sessions",  ["sessions", "which part will you join", "part", "parts"],           "which part will you join"],
   ["diet",      ["diet", "food allergy", "food allergies", "dietary needs"],         "food allergy"],
-  ["note",      ["note", "message", "wishes", "blessing", "leave your wishes here"], "note"],
-  ["hide",      ["hide"],                                                            "hide"]
 ];
 
 function sheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = SHEET ? (ss.getSheetByName(SHEET) || ss.insertSheet(SHEET)) : ss.getSheets()[0];
-  if (sh.getLastColumn() === 0) sh.getRange(1, 1, 1, 1).setValue("id");
+  if (sh.getLastColumn() === 0 || (sh.getLastRow() === 0)) {
+    var heads = FIELDS.map(function (f) { return f[2]; });
+    sh.getRange(1, 1, 1, heads.length).setValues([heads]);
+    sh.setFrozenRows(1);
+  }
   return sh;
 }
 
@@ -71,7 +75,7 @@ function doPost(e) {
       attending: d.attending ? "yes" : "no",
       guests: Number(d.guests) || 0,
       sessions: (d.sessions || []).join(", "),
-      diet: String(d.diet || "").slice(0, 200),
+      diet: String(d.diet || d.foodAllergy || d["food allergy"] || "").slice(0, 200),
       note: String(d.note || "").slice(0, 500)
     };
     sh.getRange(1, col.phone, sh.getMaxRows(), 1).setNumberFormat("@");   // keep a leading 0 in phone numbers
@@ -91,16 +95,6 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  if (!e || !e.parameter || e.parameter.action !== "wishes") return json_({ ok: true });
-  var sh = sheet_(), col = columns_(sh), n = sh.getLastRow() - 1;
-  if (n < 1) return json_({ ok: true, wishes: [] });
-  var width = sh.getLastColumn();
-  var rows = sh.getRange(2, 1, n, width).getValues(), wishes = [];
-  rows.forEach(function (r) {
-    var note = String(r[col.note - 1] || "").trim();
-    if (!note || String(r[col.hide - 1]).toUpperCase() === "TRUE") return;
-    wishes.push({ name: r[col.name - 1], note: note, at: new Date(r[col.updatedAt - 1]).getTime() || 0 });
-  });
-  wishes.sort(function (a, b) { return b.at - a.at; });
-  return json_({ ok: true, wishes: wishes.slice(0, 100) });   // only name + message are ever public
+  // nothing is public: answers are only visible in the Google Sheet itself
+  return json_({ ok: true });
 }

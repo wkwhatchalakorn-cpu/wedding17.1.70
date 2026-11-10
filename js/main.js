@@ -34,7 +34,7 @@
       attending: yes,
       guests: yes ? guests : 0,
       sessions: yes ? sessions() : [],
-      diet: yes ? $("diet").value.trim() : "",
+      diet: $("diet").value.trim(),
       note: $("note").value.trim(),
       updatedAt: new Date().toISOString()
     };
@@ -61,7 +61,10 @@
     // the process ends here: just the thank-you sentence, nothing else to do
     var t = $("r-title"); t.className = "thanks";
     t.textContent = "It is our honor and pleasure to have you share in our special occasion. Thank you for your kindness and thoughtful response.";
-    $("result").scrollIntoView({ block: "nearest" });
+    // cut to a page of its own: only the thank-you sentence stays on screen
+    document.body.classList.remove("locked");
+    document.body.classList.add("done");
+    try { window.scrollTo(0, 0); } catch (x) {}
   }
 
   function fillForm(r) {
@@ -86,26 +89,12 @@
       try { localStorage.setItem("wedding_rsvp_done", "1"); } catch (x) {}
       $("send").disabled = false;
       showResult(r, true);
-      Backend.loadWishes().then(renderWishes, function () {});
     }, function (err) {
       $("send").disabled = false;
       $("err").textContent = "Sorry, your reply could not be saved just now (" + ((err && err.message) || "error") + "). Please try again in a moment.";
     });
   });
 
-  // blessings from friends (public list from the backend)
-  function renderWishes(list) {
-    var box = $("wish-list"); box.textContent = "";
-    (list || []).forEach(function (v) {
-      if (!v || !v.note) return;
-      var el = document.createElement("div"); el.className = "wish";
-      var pp = document.createElement("p"); pp.textContent = String(v.note);
-      var nm = document.createElement("b"); nm.textContent = "\u2014 " + String(v.name || "A friend");
-      el.appendChild(pp); el.appendChild(nm); box.appendChild(el);
-    });
-    $("wish-empty").hidden = box.children.length > 0;
-  }
-  Backend.loadWishes().then(renderWishes, function () {});
 
   // a guest who already replied on this device just sees the thank-you
   try { if (localStorage.getItem("wedding_rsvp_done") === "1") showResult({}, true); } catch (x) {}

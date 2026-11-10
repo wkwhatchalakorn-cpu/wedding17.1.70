@@ -25,10 +25,6 @@
           if (!good) throw new Error((j && (j.error || j.message)) || ("unexpected reply from the server: " + JSON.stringify(j).slice(0, 80)));
           return j;
         });
-    },
-    loadWishes: function () {
-      if (!url) return Promise.resolve([]);
-      return fetch(url + "?action=wishes").then(function (res) { return res.json(); }).then(function (j) { return (j && j.wishes) || []; });
     }
   };
 })();

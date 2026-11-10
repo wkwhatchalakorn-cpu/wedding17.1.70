@@ -1,93 +1,59 @@
-// js/backend.js - จัดการการส่งข้อมูล RSVP ไปยัง Google Apps Script (พร้อมรองรับ Guest ID สำหรับ Upsert)
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. ดึง Guest ID จาก URL อัตโนมัติ (เช่น ?guest_id=G001)
-    const urlParams = new URLSearchParams(window.location.search);
-    const guestId = urlParams.get('guest_id');
-
-    const form = document.getElementById('form');
-    const submitButton = document.getElementById('send');
-
-    if (!form) return;
-
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        // 2. ดึงข้อมูลจากฟอร์มตาม HTML ที่คุณมี
-        const fullName = document.getElementById('name').value.trim();
-        const phoneNumber = document.getElementById('phone').value.trim();
-        
-        // เช็คการเข้าร่วม (Yes/No)
-        const attendRadio = document.querySelector('input[name="attend"]:checked');
-        const attending = attendRadio ? (attendRadio.value === 'yes' ? 'Yes' : 'No') : 'Yes';
-
-        // จำนวนแขก
-        const guestNumberElem = document.getElementById('gcount');
-        const guestNumber = guestNumberElem ? guestNumberElem.innerText.trim() : '1';
-
-        // ส่วนที่จะเข้าร่วม (Which Part Will You Join)
-        const checkboxes = document.querySelectorAll('input[name="sess"]:checked');
-        let parts = [];
-        checkboxes.forEach((cb) => {
-            parts.push(cb.value);
-        });
-        const whichPart = parts.join(', ');
-
-        const foodAllergy = document.getElementById('diet').value.trim();
-        const note = document.getElementById('note').value.trim();
-
-        // ตรวจสอบชื่อ-นามสกุลเบื้องต้น
-        if (!fullName) {
-            alert('กรุณากรอกชื่อ-นามสกุล (Full name)');
-            document.getElementById('name').focus();
-            return;
-        }
-
-        // 3. จัดแพ็กเกจข้อมูลเป็น JSON
-        const formData = {
-            guest_id: guestId || 'G-DIRECT-' + Date.now(), // ถ้าไม่มี Guest ID ในลิงก์ จะสร้างรหัสชั่วคราวให้
-            full_name: fullName,
-            phone_number: phoneNumber,
-            attending: attending,
-            guest_number: guestNumber,
-            which_part: whichPart,
-            food_allergy: foodAllergy,
-            note: note
-        };
-
-        // ลิงก์ Google Apps Script Web App ของคุณ
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzwF4dsBUDLOANqu9Y3c7OXnQkm-bCdYx-WgKLfB4dIn5DL6xVf_XWFUEQwg0WxuWMSQg/exec';
-
-        // เปลี่ยนสถานะปุ่มกำลังส่ง
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
-        }
-
-        // 4. ส่งข้อมูลแบบ POST ไปยัง Google Sheets
-        fetch(scriptURL, {
-            method: 'POST',
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log('Success:', result);
-            alert('บันทึกข้อมูลคำตอบรับ (RSVP) เรียบร้อยแล้ว ขอบคุณครับ!');
-            
-            // แสดงข้อความขอบคุณแบบ Inline บนหน้าเว็บ
-            const thanksElem = document.getElementById('thanks-inline');
-            if (thanksElem) thanksElem.hidden = false;
-            
-            if (submitButton) {
-                submitButton.textContent = 'Confirmed';
-            }
-        })
-        .catch(error => {
-            console.error('Error!', error);
-            alert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
-            if (submitButton) {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Confirm My Response';
-            }
-        });
-    });
-});
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000); // ป้องกันข้อมูลชนกันเวลาส่งพร้อมกัน
+  
+  try {
+    var doc = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = doc.getSheetByName("Sheet1"); // เปลี่ยนชื่อชีตตามจริง
+    
+    // รับค่าที่ส่งมาจากหน้าเว็บ (JSON)
+    var data = JSON.parse(e.postData.contents);
+    var guestId = data.guest_id;
+    
+    if (!guestId) {
+      return ContentService.createTextOutput(JSON.stringify({ "status": "error", "message": "Missing Guest ID" }))
+                           .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    var rows = sheet.getDataRange().getValues();
+    var rowIndex = -1;
+    
+    // ค้นหาว่ามี Guest ID นี้ในแถวไหนแล้วหรือยัง (เริ่มเช็คจากแถวที่ 2 เป็นต้นไป)
+    for (var i = 1; i < rows.length; i++) {
+      if (rows[i][0] == guestId) { // สมมติ Guest ID อยู่คอลัมน์แรก (Col A / Index 0)
+        rowIndex = i + 1; // ตำแหน่งแถวใน Sheet (index เริ่มจาก 0 + ส่วนหัว = i + 1)
+        break;
+      }
+    }
+    
+    var timestamp = new Date();
+    var rowData = [
+      guestId,
+      data.full_name,
+      data.phone_number,
+      data.attending,
+      data.guest_number,
+      data.which_part,
+      data.food_allergy,
+      data.note,
+      timestamp
+    ];
+    
+    if (rowIndex > -1) {
+      // ถ้าเจอแถวเดิม ให้ใช้วิธีอัปเดตข้อมูลทับแถวเดิม
+      sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
+    } else {
+      // ถ้ายังไม่เคยมี ให้เพิ่มแถวใหม่ต่อท้าย
+      sheet.appendRow(rowData);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({ "status": "success", "message": "Data saved successfully" }))
+                         .setMimeType(ContentService.MimeType.JSON);
+                         
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ "status": "error", "message": error.toString() }))
+                         .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}

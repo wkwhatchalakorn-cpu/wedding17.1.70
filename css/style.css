@@ -118,7 +118,9 @@ fieldset.field { display: block; }
 fieldset.field > legend { float: left; width: 100%; box-sizing: border-box; margin: 0 0 8px; }
 fieldset.field > legend + * { clear: both; }
 .hint { font-size: 13px; color: var(--muted); font-weight: 400; }
-input[type="text"], input[type="tel"], textarea {
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="text"], input[type="tel"], input[type="number"], textarea {
   -webkit-appearance: none; appearance: none; width: 100%; font: inherit; color: var(--ink); background: var(--field);
   border: 1px solid var(--line); border-radius: 4px; padding: 11px 13px; min-height: 46px;
 }

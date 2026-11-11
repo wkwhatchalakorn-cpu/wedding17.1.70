@@ -86,9 +86,8 @@
             <li><i style="--c:#d9c7a8"></i>Beige</li>
             <li><i style="--c:#8a8d91"></i>Grey</li>
             <li><i style="--c:#8b7d70"></i>Taupe</li>
-            <li><i style="--c:#3b3f45"></i>Charcoal Grey</li>
-            <li><i style="--c:#4a2e22"></i>Chocolate Brown</li>
             <li><i style="--c:#1c1c1c"></i>Black</li>
+          
           </ul>
         </div>
         <div class="dress-group">
@@ -100,8 +99,7 @@
             <li><i style="--c:#f0d2d6"></i>Dusty Pink</li>
             <li><i style="--c:#bcd9f2"></i>Light Blue</li>
             <li><i style="--c:#d8cdf0"></i>Lavender</li>
-            <li><i style="--c:#b8a89a"></i>Taupe</li>
-            <li><i style="--c:#c3a1b5"></i>Mauve</li>
+          
           </ul>
         </div>
       </div>
@@ -164,11 +162,7 @@
       <div id="extras" style="display:grid;gap:22px">
         <div class="field">
           <label for="gcount">4. Guests number <span class="hint">(including you)</span></label>
-          <div class="stepper">
-            <button type="button" id="dec" aria-label="Fewer guests">−</button>
-            <output id="gcount" aria-live="polite">1</output>
-            <button type="button" id="inc" aria-label="More guests">+</button>
-          </div>
+          <input type="number" id="gcount" inputmode="numeric" min="1" max="20" step="1" value="1" placeholder="e.g. 2">
         </div>
 
         <fieldset class="field">
